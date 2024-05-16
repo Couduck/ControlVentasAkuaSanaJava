@@ -3,9 +3,7 @@ package DBControllers;
 import DBConnection.ConexionDB;
 import Models.Venta;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Time;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -62,6 +60,28 @@ public class VentaDBController {
         instruccionConValores.setBigDecimal(23,ventaNueva.getTotalSinIva());
         instruccionConValores.setBigDecimal(24,ventaNueva.getImporteIva());
         instruccionConValores.setBigDecimal(25,ventaNueva.getTotal());
+
+        instruccionConValores.execute();
+    }
+
+    public ResultSet recuperarVentaEspecifico(int folioVenta) throws SQLException {
+        String instruccionSTR = "select * from ventas where vnts_folio = \"" + folioVenta +"\"";
+        Statement instruccion = this.db.getConexion().createStatement();
+        ResultSet resultados = instruccion.executeQuery(instruccionSTR);
+
+        return resultados;
+    }
+
+    public void actualizarVenta(Venta ventaEditar) throws SQLException {
+        String instruccionSTR = "update ventas set vnts_status = ?, vnts_status_pago = ?, vnts_fecha_pago = ?, vnts_importe_pago = ?, vnts_mes_factura = ? where vnts_folio = ?";
+        PreparedStatement instruccionConValores = this.db.getConexion().prepareCall(instruccionSTR);
+
+        instruccionConValores.setString(1,ventaEditar.getStatus());
+        instruccionConValores.setString(2,ventaEditar.getStatusPago());
+        instruccionConValores.setDate(3,ventaEditar.getFechaPago() == null ? null : new java.sql.Date(ventaEditar.getFechaPago().getTime()));
+        instruccionConValores.setBigDecimal(4,ventaEditar.getImportePago());
+        instruccionConValores.setString(5,ventaEditar.getMesFactura());
+        instruccionConValores.setInt(6,ventaEditar.getFolio());
 
         instruccionConValores.execute();
     }

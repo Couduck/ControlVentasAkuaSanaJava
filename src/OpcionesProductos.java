@@ -11,8 +11,8 @@ public class OpcionesProductos extends JFrame{
     public void initProductosOpciones() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         //VentasOpciones ventana = new VentasOpciones();
         this.setContentPane(this.cuerpoPanel);
-        this.setTitle("Acciones Productos");
-        this.setSize(500,250);
+        this.setTitle("PRODUCTOS");
+        this.setSize(500,350);
         this.setVisible(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);

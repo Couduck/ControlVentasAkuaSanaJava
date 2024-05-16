@@ -215,8 +215,8 @@ public class ElegirCliente extends JFrame{
     public void initElegirCliente() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         //VentasOpciones ventana = new VentasOpciones();
         this.setContentPane(this.cuerpoPanel);
-        this.setTitle("Elegir Cliente");
-        this.setSize(500, 250);
+        this.setTitle("ELEGIR CLIENTE");
+        this.setSize(500, 350);
         this.setVisible(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -227,6 +227,7 @@ public class ElegirCliente extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 Main.ventanaClientesOpciones.setVisible(true);
                 Main.ventanaElegirCliente.setVisible(false);
+                clienteSeleccionado = null;
             }
         });
 
@@ -248,6 +249,7 @@ public class ElegirCliente extends JFrame{
                     Main.ventanaAniadir_ModificarCliente.claveItemElegido = clienteSeleccionado.getClave();
                     Main.ventanaAniadir_ModificarCliente.setVisible(true);
                     Main.ventanaElegirCliente.setVisible(false);
+                    clienteSeleccionado = null;
                 }
 
                 else

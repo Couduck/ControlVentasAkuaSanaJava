@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class AniadirPrecio extends JFrame {
     private JPanel cuerpoPanel;
@@ -18,14 +19,21 @@ public class AniadirPrecio extends JFrame {
     public void initAniadirPrecio()
     {
         this.setContentPane(this.cuerpoPanel);
-        this.setSize(500,250);
+        this.setSize(500,350);
         this.setVisible(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        this.setTitle("AÑADIR PRECIO");
 
         guardarPrecioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                if(!validarCampos())
+                {
+                    Main.ventanaError.setVisible(true);
+                    return;
+                }
 
                 int precioImporteSinIVA = (Integer) campoPrecioSinIva.getValue();
 
@@ -69,6 +77,31 @@ public class AniadirPrecio extends JFrame {
             String claveActual = resultadosQuery.getString("prds_clave");
             campoTipoProducto.addItem(claveActual);
         }
+    }
 
+    public boolean validarCampos()
+    {
+        boolean sinErrores = true;
+        ArrayList<String> listaErrores = new ArrayList<String>();
+
+        if((int) campoPrecioSinIva.getValue() < 1)
+        {
+            listaErrores.add("• El precio del producto no puede ser menor a 1<br>");
+            sinErrores = false;
+        }
+
+        if(!sinErrores)
+        {
+            String listaErroresCompletaSTR = "";
+
+            for (int i = 0; i < listaErrores.size(); i++)
+            {
+                listaErroresCompletaSTR += listaErrores.get(i);
+            }
+
+            Main.ventanaError.cambiarErrorTexto(listaErroresCompletaSTR);
+        }
+
+        return sinErrores;
     }
 }

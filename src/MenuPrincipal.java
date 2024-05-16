@@ -19,8 +19,8 @@ public class MenuPrincipal extends JFrame {
        // MenuPrincipal ventana = new MenuPrincipal();
 
         this.setContentPane(this.cuerpoPanel);
-        this.setTitle("Menu Principal");
-        this.setSize(500,250);
+        this.setTitle("CONTROL VENTAS AKUASANA");
+        this.setSize(500,350);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);

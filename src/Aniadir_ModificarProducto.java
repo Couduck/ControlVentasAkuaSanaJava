@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Aniadir_ModificarProducto extends JFrame {
@@ -14,8 +15,6 @@ public class Aniadir_ModificarProducto extends JFrame {
     private JButton crearProducto;
     private JPanel cuerpoPanel;
     private JSpinner litrosProductoCampo;
-    private JPanel apartadoStatus;
-    private JPanel apartadoClave;
     private JComboBox statusProductoCampo;
     private JButton guardarCambios;
 
@@ -28,7 +27,7 @@ public class Aniadir_ModificarProducto extends JFrame {
 
         this.setContentPane(this.cuerpoPanel);
 
-        this.setSize(500,250);
+        this.setSize(500,350);
         this.setVisible(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -37,6 +36,16 @@ public class Aniadir_ModificarProducto extends JFrame {
         crearProducto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                try {
+                    if(!validarCampos())
+                    {
+                        Main.ventanaError.setVisible(true);
+                        return;
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 Date currentTime = new Date();
 
@@ -93,24 +102,28 @@ public class Aniadir_ModificarProducto extends JFrame {
     {
         if(!editar)
         {
-            this.setTitle("Añadir Producto Nuevo");
+            this.setTitle("AÑADIR PRODUCTO");
 
-            apartadoClave.setVisible(true);
-            apartadoStatus.setVisible(false);
+            /*apartadoClave.setVisible(true);
+            apartadoStatus.setVisible(false);*/
+
+            claveProductoCampo.setEnabled(true);
+            statusProductoCampo.setEnabled(false);
+            statusProductoCampo.setSelectedItem("V");
 
             vaciarCampos();
         }
 
         else
         {
-            this.setTitle("Modificar Producto");
+            this.setTitle("MODIFICAR PRODUCTO");
 
-            apartadoClave.setVisible(false);
+            claveProductoCampo.setEnabled(false);
             claveProductoCampo.setText(producto.getClave());
 
             nombreCampoProducto.setText(producto.getNombre());
 
-            apartadoStatus.setVisible(true);
+            statusProductoCampo.setEnabled(true);
             statusProductoCampo.setSelectedItem(producto.getStatus());
 
             litrosProductoCampo.setValue(producto.getLitros());
@@ -127,5 +140,54 @@ public class Aniadir_ModificarProducto extends JFrame {
         nombreCampoProducto.setText("");
         litrosProductoCampo.setValue(0);
         nombreBICampoProducto.setText("");
+    }
+
+    public boolean validarCampos() throws SQLException {
+        boolean sinErrores = true;
+        ArrayList<String> listaErrores = new ArrayList<String>();
+
+        if(claveProductoCampo.getText().isBlank())
+        {
+            listaErrores.add("• No se ha ingresado ninguna clave para identificar el Producto<br>");
+            sinErrores = false;
+        }
+
+        if(Main.productoDBController.productoExiste(claveProductoCampo.getText()) && !editarProductoExistente)
+        {
+            listaErrores.add("• Clave proporcionada ya existente dentro de la Lista de Productos<br>");
+            sinErrores = false;
+        }
+
+        if((int) litrosProductoCampo.getValue() < 1)
+        {
+            listaErrores.add("• Los litros mínimos del producto deen ser mayor a 0<br>");
+            sinErrores = false;
+        }
+
+        if(nombreCampoProducto.getText().isBlank())
+        {
+            listaErrores.add("• No se ha ingresado ningún nombre para el Producto<br>");
+            sinErrores = false;
+        }
+
+        if(nombreBICampoProducto.getText().isBlank())
+        {
+            listaErrores.add("• No se ha ingresado ningún nombre para el Producto para su uso en BI");
+            sinErrores = false;
+        }
+
+        if(!sinErrores)
+        {
+            String listaErroresCompletaSTR = "";
+
+            for (int i = 0; i < listaErrores.size(); i++)
+            {
+                listaErroresCompletaSTR += listaErrores.get(i);
+            }
+
+            Main.ventanaError.cambiarErrorTexto(listaErroresCompletaSTR);
+        }
+
+        return sinErrores;
     }
 }

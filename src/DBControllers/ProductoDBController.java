@@ -57,4 +57,19 @@ public class ProductoDBController
 
         instruccionConValores.execute();
     }
+
+    public boolean productoExiste(String claveProducto) throws SQLException {
+        String instruccionSTR = "select * from productos where prds_clave = \""+ claveProducto +"\"";
+        Statement  instruccion = this.db.getConexion().createStatement();
+        ResultSet resultados = instruccion.executeQuery(instruccionSTR);
+
+        boolean productoYaExiste = false;
+
+        if(resultados.next())
+        {
+            productoYaExiste = true;
+        }
+
+        return productoYaExiste;
+    }
 }

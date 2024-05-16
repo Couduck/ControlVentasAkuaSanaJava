@@ -66,8 +66,8 @@ public class ElegirProducto extends JFrame{
     public void initElegirProducto() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         //VentasOpciones ventana = new VentasqOpciones();
         this.setContentPane(this.cuerpoPanel);
-        this.setTitle("Elegir Producto");
-        this.setSize(500, 250);
+        this.setTitle("ELEGIR PRODUCTO");
+        this.setSize(500, 350);
         this.setVisible(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -78,6 +78,7 @@ public class ElegirProducto extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 Main.ventanaProductosOpciones.setVisible(true);
                 Main.ventanaElegirProducto.setVisible(false);
+                productoSeleccionado = null;
             }
         });
 
@@ -108,6 +109,7 @@ public class ElegirProducto extends JFrame{
                     Main.ventanaAniadir_ModificarProducto.cambiarDisposicionInsertar_Editar(true, productoSeleccionado);
                     Main.ventanaAniadir_ModificarProducto.setVisible(true);
                     Main.ventanaElegirProducto.setVisible(false);
+                    productoSeleccionado = null;
                 }
 
                 else

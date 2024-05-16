@@ -157,4 +157,19 @@ public class ClienteDBController
         instruccionConValores.execute();
         
     }
+
+    public boolean clienteExiste(String nombreCliente) throws SQLException {
+        String instruccionSTR = "select * from clientes where clnts_nombre_corto = \""+ nombreCliente +"\"";
+        Statement  instruccion = this.db.getConexion().createStatement();
+        ResultSet resultados = instruccion.executeQuery(instruccionSTR);
+
+        boolean clienteYaExiste = false;
+
+        if(resultados.next())
+        {
+            clienteYaExiste = true;
+        }
+
+        return clienteYaExiste;
+    }
 }

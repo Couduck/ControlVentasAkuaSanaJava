@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Aniadir_ModificarCliente extends JFrame {
@@ -20,7 +21,6 @@ public class Aniadir_ModificarCliente extends JFrame {
     private JButton crearCliente;
     private JTextField correoFacturaCampoCliente;
     private JTextField observacionesCampoCliente;
-    private JPanel apartadoNombreClave;
     private JPanel apartadoStatus;
     private JComboBox statusCampoCliente;
     private JComboBox capaPrecioCampoCliente;
@@ -46,7 +46,7 @@ public class Aniadir_ModificarCliente extends JFrame {
         formaPagoCampoCliente.addItem("EFEC");
 
         this.setContentPane(this.cuerpoPanel);
-        this.setSize(500, 250);
+        this.setSize(500, 350);
         this.setVisible(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -55,6 +55,16 @@ public class Aniadir_ModificarCliente extends JFrame {
         crearCliente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                try {
+                    if(!validarCampos())
+                    {
+                        Main.ventanaError.setVisible(true);
+                        return;
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 Date currentTime = new Date();
                 java.sql.Date fechaAltaProducto = new java.sql.Date(currentTime.getTime());
@@ -129,9 +139,11 @@ public class Aniadir_ModificarCliente extends JFrame {
     {
         if(!editar)
         {
-            this.setTitle("Añadir Cliente Nuevo");
+            this.setTitle("AÑADIR CLIENTE");
 
-            apartadoStatus.setVisible(false);
+            //apartadoStatus.setVisible(false);
+            statusCampoCliente.setEnabled(false);
+            statusCampoCliente.setSelectedItem("V");
             nombreClaveCampoCliente.setEnabled(true);
 
             vaciarCampos();
@@ -139,9 +151,10 @@ public class Aniadir_ModificarCliente extends JFrame {
 
         else
         {
-            this.setTitle("Modificar Cliente");
+            this.setTitle("MODIFICAR CLIENTE");
 
-            apartadoStatus.setVisible(true);
+            //apartadoStatus.setVisible(true);
+            statusCampoCliente.setEnabled(true);
             nombreClaveCampoCliente.setEnabled(false);
 
             nombreClaveCampoCliente.setText(cliente.getNombreClave());
@@ -151,6 +164,7 @@ public class Aniadir_ModificarCliente extends JFrame {
             formaPagoCampoCliente.setSelectedItem(cliente.getFormaPago());
             correoFacturaCampoCliente.setText(cliente.getCorreoFacturas());
             observacionesCampoCliente.setText(cliente.getObservaciones());
+            capaPrecioCampoCliente.setSelectedItem(cliente.getClavePrecio());
         }
 
         editarClienteExistente = editar;
@@ -174,5 +188,36 @@ public class Aniadir_ModificarCliente extends JFrame {
         nombreClaveCampoCliente.setText("");
         correoFacturaCampoCliente.setText("");
         observacionesCampoCliente.setText("");
+    }
+
+    public boolean validarCampos() throws SQLException {
+        boolean sinErrores = true;
+        ArrayList<String> listaErrores = new ArrayList<String>();
+
+        if(nombreClaveCampoCliente.getText().isBlank())
+        {
+            listaErrores.add("• No se ha ingresado ningun nombre clave para identificar el Cliente<br>");
+            sinErrores = false;
+        }
+
+        if(Main.clienteDBController.clienteExiste(nombreClaveCampoCliente.getText()) && !editarClienteExistente)
+        {
+            listaErrores.add("• Nombre clave proporcionado ya existente dentro de la Lista de Clientes<br>");
+            sinErrores = false;
+        }
+
+        if(!sinErrores)
+        {
+            String listaErroresCompletaSTR = "";
+
+            for (int i = 0; i < listaErrores.size(); i++)
+            {
+                listaErroresCompletaSTR += listaErrores.get(i);
+            }
+
+            Main.ventanaError.cambiarErrorTexto(listaErroresCompletaSTR);
+        }
+
+        return sinErrores;
     }
 }

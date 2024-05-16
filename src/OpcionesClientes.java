@@ -12,8 +12,8 @@ public class OpcionesClientes extends JFrame{
     public void initClientesOpciones() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         //VentasOpciones ventana = new VentasOpciones();
         this.setContentPane(this.cuerpoPanel);
-        this.setTitle("Acciones Clientes");
-        this.setSize(500,250);
+        this.setTitle("CLIENTES");
+        this.setSize(500,350);
         this.setVisible(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
